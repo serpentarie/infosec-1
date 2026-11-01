@@ -10,10 +10,10 @@ permissions:
 
 jobs:
   tests-and-bandit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
           cache: pip
@@ -26,17 +26,17 @@ jobs:
         run: python -m bandit -r api -f json -o reports/bandit.json
       - name: Upload test and SAST reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: tests-and-sast
           path: reports/
           if-no-files-found: error
 
   dependency-scans:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
           cache: pip
@@ -44,7 +44,7 @@ jobs:
       - run: mkdir -p reports
       - name: pip-audit SCA (no account required)
         run: python -m pip_audit -r requirements.txt --strict --format json --output reports/pip-audit.json
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: ${{ !cancelled() }}
         with:
           node-version: '22'
@@ -63,7 +63,7 @@ jobs:
           snyk test --file=requirements.txt --package-manager=pip --command=python --severity-threshold=high --json-file-output=reports/snyk.json
       - name: Upload dependency reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: sca-reports
           path: reports/
