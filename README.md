@@ -64,8 +64,30 @@ GitHub Actions запускает проверки при push и pull request:
 
 ## Результаты CI
 
-[Успешный запуск pipeline](https://github.com/serpentarie/infosec-1/actions/runs/41328846001/attempts/2).
+[Репозиторий проекта](https://github.com/serpentarie/infosec-1).
+
+[Успешный запуск pipeline без предупреждений](https://github.com/serpentarie/infosec-1/actions/runs/41329306542).
 
 Тесты, Bandit, pip-audit и Snyk завершились успешно.
+Bandit не обнаружил проблем в коде, pip-audit — известных уязвимостей зависимостей,
+Snyk — уязвимостей высокого и критического уровня.
 
-Для сдачи осталось приложить скриншоты отчетов Bandit и Snyk из этого запуска.
+Общий результат запуска и сохраненные артефакты:
+
+![Общий результат CI](docs/screenshots/image.png)
+
+Успешный шаг SAST:
+
+![Bandit SAST](docs/screenshots/image-1.png)
+
+Отчет Bandit: ошибки анализа и найденные проблемы отсутствуют.
+
+![Отчет Bandit](docs/screenshots/image-2.png)
+
+Успешный шаг SCA:
+
+![Snyk SCA](docs/screenshots/image-4.png)
+
+JSON-отчет Snyk:
+
+![Отчет Snyk](docs/screenshots/image-3.png)
