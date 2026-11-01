@@ -64,8 +64,6 @@ GitHub Actions запускает проверки при push и pull request:
 
 ## Результаты CI
 
-[Репозиторий проекта](https://github.com/serpentarie/infosec-1).
-
 [Успешный запуск pipeline без предупреждений](https://github.com/serpentarie/infosec-1/actions/runs/41329306542).
 
 Тесты, Bandit, pip-audit и Snyk завершились успешно.
