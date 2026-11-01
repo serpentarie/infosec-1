@@ -64,5 +64,8 @@ GitHub Actions запускает проверки при push и pull request:
 
 ## Результаты CI
 
-- скриншоты отчетов Bandit и Snyk из GitHub Actions;
-- ссылку на последний успешный pipeline.
+[Успешный запуск pipeline](https://github.com/serpentarie/infosec-1/actions/runs/41328846001/attempts/2).
+
+Тесты, Bandit, pip-audit и Snyk завершились успешно.
+
+Для сдачи осталось приложить скриншоты отчетов Bandit и Snyk из этого запуска.
