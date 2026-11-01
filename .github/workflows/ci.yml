@@ -1,0 +1,70 @@
+name: Secure API CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests-and-bandit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: mkdir -p reports
+      - name: API and security regression tests
+        run: python -m pytest -v --junitxml=reports/tests.xml
+      - name: Bandit SAST
+        if: ${{ !cancelled() }}
+        run: python -m bandit -r api -f json -o reports/bandit.json
+      - name: Upload test and SAST reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-and-sast
+          path: reports/
+          if-no-files-found: error
+
+  dependency-scans:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: mkdir -p reports
+      - name: pip-audit SCA (no account required)
+        run: python -m pip_audit -r requirements.txt --strict --format json --output reports/pip-audit.json
+      - uses: actions/setup-node@v4
+        if: ${{ !cancelled() }}
+        with:
+          node-version: '22'
+      - name: Install Snyk CLI
+        if: ${{ !cancelled() }}
+        run: npm install --global snyk
+      - name: Snyk SCA
+        if: ${{ !cancelled() }}
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          if [ -z "$SNYK_TOKEN" ]; then
+            echo '::error::Add repository secret SNYK_TOKEN to run the required Snyk scan.'
+            exit 1
+          fi
+          snyk test --file=requirements.txt --package-manager=pip --command=python --severity-threshold=high --json-file-output=reports/snyk.json
+      - name: Upload dependency reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sca-reports
+          path: reports/
+          if-no-files-found: error

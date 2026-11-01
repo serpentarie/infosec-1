@@ -1,0 +1,6 @@
+Flask
+PyJWT
+waitress
+pytest
+bandit
+pip-audit
